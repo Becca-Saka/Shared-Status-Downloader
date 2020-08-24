@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "297567920657",
+    "firebase_url": "https://nira-apps.firebaseio.com",
+    "project_id": "nira-apps",
+    "storage_bucket": "nira-apps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:297567920657:android:742f5b02510f68ed9607b0",
+        "android_client_info": {
+          "package_name": "com.status_downloader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "297567920657-89bc3f5s31meuedsvc0cmj9lpmlmiqfn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.status_downloader",
+            "certificate_hash": "d5198fb3fe606fc25fa360a4d8653de5885edf2f"
+          }
+        },
+        {
+          "client_id": "297567920657-lpaigv9plg1qqgtl0u3f3145f5di5e87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5liDubPIhJkSUFRGq54aE0n3ho5VsGaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "297567920657-lpaigv9plg1qqgtl0u3f3145f5di5e87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
