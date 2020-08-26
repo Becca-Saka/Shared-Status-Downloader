@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'file:///C:/Users/TSP/FlutterProjects/status_downloader/lib/views/home/home_viewmodel.dart';
+import 'package:status_downloader/views/home/home_viewmodel.dart';
 
 class ImagesPreview extends StatelessWidget {
   final String imagePath;
@@ -55,7 +55,8 @@ class ImagesPreview extends StatelessWidget {
                       Expanded(
                         child: IconButton(icon: Icon(Icons.cloud_upload),
                        onPressed: (){
-                         
+                         model.uploadFile(imagePath, true);
+                        // print(imagePath);
                        }),
                      ),
                   

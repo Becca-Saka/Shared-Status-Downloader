@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
-import 'file:///C:/Users/TSP/FlutterProjects/status_downloader/lib/views/home/home_viewmodel.dart';
+import 'package:status_downloader/views/home/home_viewmodel.dart';
 import 'package:status_downloader/views/widgets/play_pause_overlay.dart';
 import 'package:video_player/video_player.dart';
 
@@ -99,7 +99,7 @@ class VideosPreview extends StatelessWidget {
                      Expanded(
                         child: IconButton(icon: Icon(Icons.cloud_upload),
                        onPressed: (){
-                         
+                         model.uploadFile(videoPath, false);
                        }),
                      ),
                   

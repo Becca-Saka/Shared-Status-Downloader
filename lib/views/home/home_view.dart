@@ -13,27 +13,7 @@ class HomeView extends StatelessWidget {
       builder: (context, model, child){
 
         return Scaffold(
-          appBar: AppBar(
-            title: Text('Shared Status Downloader'),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.lightbulb_outline),
-                onPressed: (){},
-              ),
-              IconButton(
-                icon: Icon(Icons.folder_shared),
-                onPressed: (){
-                  Navigator.push(context, CupertinoPageRoute(builder: (context)=>
-                      SharedView()
-                  ));
-                },
-              ),
-//          IconButton(
-//            icon: Icon(Icons.lightbulb_outline),
-//            onPressed: (){},
-//          ),
-            ],
-          ),
+         
           body: Container(
             child: DefaultTabController(
               length: 2,

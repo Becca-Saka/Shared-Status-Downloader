@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:status_downloader/services/permission_service.dart';
+import 'package:status_downloader/services/firebase_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
@@ -18,7 +18,7 @@ import 'package:wc_flutter_share/wc_flutter_share.dart';
 class HomeViewModel extends BaseViewModel{
   int _storagePermissionCheck;
   Future<int> _storagePermissionChecker;
-  PermissionService _permissionServices;
+  FireBaseService _firebaseService = FireBaseService();
   bool isPermitted = false;
   bool get isLoadBusy => _isLoadBusy;
   bool _isLoadBusy = true;
@@ -187,6 +187,21 @@ class HomeViewModel extends BaseViewModel{
     text: 'This is the text',
     bytesOfFile: byte.buffer.asUint8List()
     );
+  }
+  uploader(path){
+    print('yess');
+  }
+
+  Future<String> uploadFile(path, bool isImage) async{
+    String shareLink;
+    File file = File(path);
+    print('file');
+    print(file.path);
+    await _firebaseService.uploadFile(file, isImage);
+    print('here');
+
+    return shareLink;
+
   }
 
   

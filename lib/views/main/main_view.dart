@@ -21,12 +21,21 @@ class MainView extends StatelessWidget {
     return ViewModelBuilder<MainViewModel>.reactive(
       builder: (context,model, child){
         return Scaffold(
+           appBar: AppBar(
+            title: Text('Shared Status Downloader'),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.lightbulb_outline),
+                onPressed: (){},
+              ),
+            ],
+          ),
           body: _screens[model.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
             onTap: model.changeIndex,
             currentIndex: model.currentIndex,
             items: [
-            BottomNavigationBarItem(icon: Icon(Icons.phone),
+            BottomNavigationBarItem(icon: Icon(Icons.phone_android),
             title: Text('Local')),
           
             BottomNavigationBarItem(icon: Icon(Icons.folder_shared),

@@ -1,18 +1,18 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:status_downloader/views/signin/signin_view.dart';
 import 'shared_viewmodel.dart';
 
 class SharedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return ViewModelBuilder<SharedViewModel>.nonReactive(
       builder: (context, model, child){
         return Scaffold(
-          appBar: AppBar(
-            title: Text('Shared with you'),
-            ),
-          body: Column(
+          body: model.isSignedIn?  Column(
             children: <Widget>[
             Row(
               children: <Widget>[
@@ -53,6 +53,42 @@ class SharedView extends StatelessWidget {
                       ),
                   );}):
                   Expanded(child: Center(child: Text('No videos found'))),
+              ),    
+            ],
+          ):Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('You need to sign in to use this feature',
+              style:  TextStyle(fontSize:  width/20,
+               fontWeight: FontWeight.w300,  color: Colors.black)),
+              
+              SizedBox(height: 15,),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30
+                ),
+                child:InkWell(
+                    onTap: (){
+                      Navigator.push(context, CupertinoPageRoute(builder: (context)=>
+                    SignInView()));
+                    },  
+                    child: Container(
+                    decoration: BoxDecoration(
+                      
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(5)
+
+                    ),
+                    height: 50,
+                    child: InkWell(
+                            onTap: (){
+                              Navigator.push(context, CupertinoPageRoute(builder: (context)=>
+                            SignInView()));
+                            },
+                            child: Center(child: Text('Sign In')),
+                          ),
+                  ),
+                ),
               ),
             ],
           ),
