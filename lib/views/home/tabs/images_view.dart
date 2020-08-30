@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:status_downloader/views/previewers/image_preview.dart';
+import 'package:status_downloader/views/home/previewers/image_preview.dart';
 
 import '../home_viewmodel.dart';
 
@@ -27,11 +27,7 @@ class ImagesView extends StatelessWidget {
               itemBuilder: (context, index){
                 String imagePath = model.statusImageList[index];
                 return InkWell(
-                  onTap: (){
-                     Navigator.push(context, CupertinoPageRoute(builder: (context)=>
-                  ImagesPreview(imagePath)
-                  ));
-                  },
+                  onTap: ()=>model.navigateToImagePreview(imagePath),
                         child: Hero(
                           tag: imagePath,
                           child: Container(

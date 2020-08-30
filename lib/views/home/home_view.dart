@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-
 import 'home_viewmodel.dart';
-import '../shared/shared_view.dart';
 import 'tabs/images_view.dart';
 import 'tabs/videos_view.dart';
 class HomeView extends StatelessWidget {
@@ -26,9 +24,6 @@ class HomeView extends StatelessWidget {
                           border: Border(
                               bottom: BorderSide(color: Colors.grey, width: 0.5))),
                       child: TabBar(
-//                    labelPadding: EdgeInsets.symmetric(horizontal: 1),
-//                    unselectedLabelColor: Theme.of(context).cursorColor,
-//                    labelColor: Theme.of(context).buttonColor,
                         indicatorColor: Theme.of(context).buttonColor,
                         tabs: [
                           Tab(
@@ -40,7 +35,7 @@ class HomeView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    model.isLoadBusy? Expanded(child: Center(child:
+                    model.isBusy? Expanded(child: Center(child:
                     CircularProgressIndicator())):
                     model.isPermitted?
                     model.isWhatsappInstalled? Expanded(

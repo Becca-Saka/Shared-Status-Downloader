@@ -2,28 +2,28 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
-
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:status_downloader/router/locator.dart';
+import 'package:status_downloader/router/routes.dart';
 import 'package:status_downloader/services/firebase_service.dart';
+import 'package:status_downloader/services/permision_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 class HomeViewModel extends BaseViewModel{
+  NavigationService _navigationService = locator<NavigationService>();
+  FireBaseService _firebaseService = locator<FireBaseService>();
+  PermissionService _permissionService = locator<PermissionService>();
+  DialogService _dialogService = locator<DialogService>();
   int _storagePermissionCheck;
   Future<int> _storagePermissionChecker;
-  FireBaseService _firebaseService = FireBaseService();
   bool isPermitted = false;
-  bool get isLoadBusy => _isLoadBusy;
-  bool _isLoadBusy = true;
   bool isWhatsappInstalled = true;
-   List<VideoModel> _statusVideoes = [];
+  List<VideoModel> _statusVideoes = [];
   List<VideoModel> get statusVideoes => _statusVideoes;
   List<String> _statusImageList = [];
   List<String> get statusImageList => _statusImageList;
@@ -37,44 +37,11 @@ class HomeViewModel extends BaseViewModel{
   VideoPlayerController controller;
   Future<void> intializeVideoPlayerFuture;
 
-  // Future<bool> requestStoragePermission() async{
-  //   Map<Permission, PermissionStatus> result = await [Permission.storage].request();
-  //   if(result[Permission.storage].isDenied){
-  //     isPermitted = false;
-  //     notifyListeners();
-  //     return result[Permission.storage].isDenied;
-
-  //   }else if(result[Permission.storage].isGranted){
-  //     isPermitted = true;
-  //     notifyListeners();
-  //     return result[Permission.storage].isGranted;
-  //   }else{
-  //     isPermitted = false;
-  //     notifyListeners();
-  //     return result[Permission.storage].isUndetermined;
-  //   }
-
-  // }
- 
-
-  Future<bool> getStoragePermission() async {
-    final PermissionStatus permission = await Permission.storage.status;
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.denied) {
-      final Map<Permission, PermissionStatus> permissionStatus =
-      await [Permission.storage].request();
-      return permissionStatus[Permission.storage] == PermissionStatus.granted;
-    } else {
-      return permission == PermissionStatus.granted;
-    }
-  }
-
-
   storagePermissionChecker () async{
-    _isLoadBusy = true;
+    setBusy(true);
     notifyListeners();
-    isPermitted = await getStoragePermission();
-    _isLoadBusy = false;
+    isPermitted = await _permissionService.getStoragePermission();
+    setBusy(false);
     notifyListeners();
     // print(isPermitted);
   //  if(isPermitted){
@@ -88,10 +55,7 @@ class HomeViewModel extends BaseViewModel{
   }
 
   getAllStatus(){
-    if(_isLoadBusy == false){
-    _isLoadBusy = true;
-      notifyListeners();
-      }
+    setBusy(true);
     if(!isPermitted){
       if(!Directory('${_photoDirectory.path}').existsSync()){
         isWhatsappInstalled = false;
@@ -108,11 +72,12 @@ class HomeViewModel extends BaseViewModel{
     }else{
       print('na me');
     }
-  _isLoadBusy = false;
+  setBusy(false);
   notifyListeners();
   
   }
   getThumbNails() async{
+    setBusy(true);
     for(final item in _statusVideoList){
       var thumb = await VideoThumbnail
       .thumbnailData(video: item,
@@ -121,9 +86,37 @@ class HomeViewModel extends BaseViewModel{
         _statusVideoes.add(new VideoModel(item,thumb));
 
     }
+     setBusy(false);
 
   notifyListeners();
   
+  }
+
+   getIndividualThumbNails(path) async{
+    setBusy(true);
+    
+    for(final item in _statusVideoList){
+      var thumb = await VideoThumbnail
+      .thumbnailData(video: item,
+        quality: 50,
+        imageFormat: ImageFormat.JPEG);
+        _statusVideoes.add(new VideoModel(item,thumb));
+
+    }
+     setBusy(false);
+
+  notifyListeners();
+  
+  }
+
+
+  navigateToImagePreview(imagePath){
+    _navigationService.navigateTo(RoutesNames.imagesPreview, arguments:imagePath);
+
+  }
+  navigateToVideoPreview(VideoModel videoModel){
+    _navigationService.navigateTo(RoutesNames.videoPreview, arguments:videoModel);
+
   }
   
   saveImage(path) async{
@@ -192,17 +185,45 @@ class HomeViewModel extends BaseViewModel{
     print('yess');
   }
 
-  Future<String> uploadFile(path, bool isImage) async{
+  Future<String> uploadFile( bool isImage,{VideoModel videoModel,String path} ) async{
     String shareLink;
-    File file = File(path);
+    File file = File(isImage?path:videoModel.path);
     print('file');
     print(file.path);
-    await _firebaseService.uploadFile(file, isImage);
+   final uploaded = isImage?
+   await _firebaseService.uploadFile(file, isImage,):
+   await _firebaseService.uploadFile(file, isImage,thumb:videoModel.thumb);
+  //  if(uploaded != null){
+  //    _dialogService.showCustomDialog();
+  //  }
     print('here');
+    print(uploaded);
 
-    return shareLink;
+    return uploaded;
 
   }
+  Function copyLinkTo(link) {
+  print('works');
+    //  Clipboard.setData(new ClipboardData(text: link));
+
+     return ()=>Clipboard.setData(new ClipboardData(text: link));
+    
+  }
+
+  // Future<String> saveToDataBase(path, bool isImage, thumb) async{
+  //   String shareLink;
+  //   File file = File(path);
+  //   print('file');
+  //   print(file.path);
+  //   final uploaded = isImage?
+  //  await _firebaseService.uploadFile(file, isImage,):
+  //  await _firebaseService.uploadFile(file, isImage,thumb:videoModel.thumb);
+  //   await _firebaseService.uploadFile(file, isImage,thumb);
+    // print('here');
+
+    // return shareLink;
+
+  // }
 
   
 }

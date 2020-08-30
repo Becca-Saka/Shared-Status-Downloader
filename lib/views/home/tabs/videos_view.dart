@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:status_downloader/views/previewers/video_preview.dart';
+import 'package:status_downloader/views/home/previewers/video_preview.dart';
+import 'package:status_downloader/views/widgets/size_config.dart';
 
+import '../../widget.dart';
 import '../home_viewmodel.dart';
 
 class VideosView extends StatelessWidget {
@@ -23,11 +25,7 @@ class VideosView extends StatelessWidget {
                 final videoPath = model.statusVideoes[index].path;
                 final videoThumb = model.statusVideoes[index].thumb;
                 return InkWell(
-                  onTap: (){
-                     Navigator.push(context, CupertinoPageRoute(builder: (context)=>
-                  VideosPreview(videoPath)
-                  ));
-                  },
+                  onTap: ()=>model.navigateToVideoPreview(model.statusVideoes[index]),
                         child: Hero(
                           tag: videoPath,
                           child: Padding(
@@ -35,26 +33,10 @@ class VideosView extends StatelessWidget {
                             child: Container(
                     height: 200,
                     width:width,
-                    child:
-                     Stack(
-                      fit: StackFit.expand,
-                         children: [
-                            Image.memory(videoThumb,
-                             fit: BoxFit.cover,
-                             ),
-                             Center(child: Container(
-                               decoration: BoxDecoration(
-                                 color: Colors.grey.withOpacity(0.5),
-                                 borderRadius: BorderRadius.circular(50)
-                               ),
-                               child: Icon(Icons.play_arrow, size: 80,)))
-                      ]
-                    ),
-                    ),
-                          ),
-                        ),
+                    child: playOverlay(videoThumb,SizeConfig.xMargin(context, 12))
+                     ),),),
                 );}):
-                  Center(child: Text('No video found', style: TextStyle(
+                 model.isBusy?Center(child: CircularProgressIndicator()) :Center(child: Text('No video found', style: TextStyle(
                 fontSize: 30,
               ),)),
           ),

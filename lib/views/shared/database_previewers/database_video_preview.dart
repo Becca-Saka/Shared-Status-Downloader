@@ -5,24 +5,33 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
+import 'package:status_downloader/models/status_details.dart';
+import 'package:status_downloader/services/dynamic_link_service.dart';
 import 'package:status_downloader/views/home/home_viewmodel.dart';
+import 'package:status_downloader/views/shared/shared_viewmodel.dart';
 import 'package:status_downloader/views/widgets/play_pause_overlay.dart';
 import 'package:video_player/video_player.dart';
 
-class VideosPreview extends StatelessWidget {
-  final String videoPath;
-  VideosPreview(this.videoPath);
+class DatabaseVideosPreview extends StatelessWidget {
+  final StatusDetails statusDetails;
+  DatabaseVideosPreview(this.statusDetails);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HomeViewModel>.reactive(
+    return ViewModelBuilder<SharedViewModel>.reactive(
       builder: (context, model, child){
         
         return Scaffold(
-           appBar: AppBar(
-             elevation: 0.0,
-             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-           ),
+            appBar: AppBar(
+              elevation: 0.0,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back, color:Colors.black),
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+              ),
+            ),
           body: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -30,7 +39,7 @@ class VideosPreview extends StatelessWidget {
                 Expanded(
                   child: Container(
                       child:   Hero(
-                        tag: videoPath,
+                        tag: statusDetails.url,
                               child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 vertical:20, horizontal: 5,
@@ -86,22 +95,17 @@ class VideosPreview extends StatelessWidget {
                     Expanded(
                        child: IconButton(icon: Icon(Icons.save),
                        onPressed: (){
-                         model.saveVideo(videoPath);
+                         model.saveVideo(statusDetails.url);
 
                        }),
                     ),
                      Expanded(
                         child: IconButton(icon: Icon(Icons.share),
                        onPressed: (){
-                         model.share(videoPath, false);
+                         model.share(statusDetails.url, false);
                        }),
                      ),
-                     Expanded(
-                        child: IconButton(icon: Icon(Icons.cloud_upload),
-                       onPressed: (){
-                         model.uploadFile(videoPath, false);
-                       }),
-                     ),
+                    
                   
                   ],
                 )
@@ -109,9 +113,10 @@ class VideosPreview extends StatelessWidget {
             ),
           ));
       },
-      viewModelBuilder:()=> HomeViewModel(),
+      viewModelBuilder:()=> SharedViewModel(),
       onModelReady: (model) async{
-        await model.initializeVideoController(videoPath);
+        await model.initializeNetworkVideoController(statusDetails.url);
+         DynamicLinkService().retriveDynamicLinks();
       },
     
     );

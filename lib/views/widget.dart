@@ -8,10 +8,12 @@ Widget textViewCard( String hintText, TextEditingController controller, Icon pre
    shape: RoundedRectangleBorder(
     borderRadius: BorderRadius.circular(10)
   ),
-  child: TextField(
+  child: TextFormField(
     controller: controller,
     keyboardType: textInputType,
+  
     decoration: InputDecoration(
+    
        focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(
@@ -28,3 +30,20 @@ Widget textViewCard( String hintText, TextEditingController controller, Icon pre
       prefixIcon: prefixIcon
     ),
   ),);
+
+
+  Widget playOverlay(videoThumb, size)=> Stack(
+                      fit: StackFit.expand,
+                         children: [
+                            Image.memory(videoThumb,
+                             fit: BoxFit.cover,
+                             ),
+                             Center(child: Container(
+                               decoration: BoxDecoration(
+                                 color: Colors.grey.withOpacity(0.5),
+                                 borderRadius: BorderRadius.circular(50)
+                               ),
+                               child: Icon(Icons.play_arrow, size: size,)))
+                      ]
+                    );
+                   

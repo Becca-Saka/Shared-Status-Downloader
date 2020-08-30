@@ -35,6 +35,10 @@ dependencies:
   image_gallery_saver: ^1.5.0
   video_player: ^0.10.12
   stacked: ^1.7.6
+  stacked_services: ^0.5.2
+  get_it: ^4.0.4
+  # http: ^0.12.2
+  device_preview: ^0.4.8
   video_thumbnail: ^0.2.2
   wc_flutter_share: ^0.2.2
 
