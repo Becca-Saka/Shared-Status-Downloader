@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stacked_services/stacked_services.dart';
+import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/views/widgets/size_config.dart';
 
 class MyDialogService{
+  SnackbarService _snackbarService = locator<SnackbarService>();
   Future<void> showLoadingDialog(BuildContext context, GlobalKey key) async{
     return showDialog<void>(
       context: context,
@@ -54,7 +57,7 @@ class MyDialogService{
 
 
     Future<void> showCopyDialog(BuildContext context, GlobalKey key,
-     String link, Function onPressed) async{
+     String link) async{
      return  showGeneralDialog(
         context: context, 
         pageBuilder: (context, animation1, animation2){},
@@ -131,6 +134,10 @@ class MyDialogService{
                     color: Colors.green,
                     onPressed:(){
                       Clipboard.setData(new ClipboardData(text: link));
+                      Navigator.pop(context);
+                      _snackbarService.showSnackbar(message: 'Link copied',
+                      duration: Duration(milliseconds:1000)
+                      );
                     },
                     child: Center(
                       child: Text(

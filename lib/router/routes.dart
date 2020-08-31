@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:status_downloader/views/home/previewers/image_preview.dart';
 import 'package:status_downloader/views/home/previewers/video_preview.dart';
+import 'package:status_downloader/views/main/downloaded_view.dart';
 import 'package:status_downloader/views/main/main_view.dart';
 import 'package:status_downloader/views/shared/database_previewers/database_image_preview.dart';
 import 'package:status_downloader/views/shared/database_previewers/database_video_preview.dart';
@@ -22,6 +23,7 @@ abstract class RoutesNames {
   static const videoPreview = '/videoPreview';
   static const databaseImagePreview = '/databaseImagePreview';
   static const databaseVideoPreview = '/databaseVideoPreview';
+  static const downloadedView = '/downloadedView';
 }
 
 class Routes {
@@ -77,6 +79,13 @@ class Routes {
           builder: (context) => DatabaseVideosPreview(argument),
           settings: settings,
         );
+
+      case RoutesNames.downloadedView:
+        return CupertinoPageRoute<dynamic>(
+          builder: (context) => DownloadedView(),
+          settings: settings,
+        );
+
 
 
 

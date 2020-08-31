@@ -1,15 +1,10 @@
-import 'dart:io';
-import 'dart:async';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:status_downloader/models/status_details.dart';
-import 'package:status_downloader/services/dynamic_link_service.dart';
-import 'package:status_downloader/views/home/home_viewmodel.dart';
+import 'package:status_downloader/router/locator.dart';
+import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/shared/shared_viewmodel.dart';
-import 'package:status_downloader/views/widgets/play_pause_overlay.dart';
 import 'package:video_player/video_player.dart';
 
 class DatabaseVideosPreview extends StatelessWidget {
@@ -18,6 +13,7 @@ class DatabaseVideosPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SnackbarService _snackbarService = locator<SnackbarService>();
     return ViewModelBuilder<SharedViewModel>.reactive(
       builder: (context, model, child){
         
@@ -81,30 +77,39 @@ class DatabaseVideosPreview extends StatelessWidget {
                             }else{
                               return Center(child: CircularProgressIndicator());
                             }
-                          })
-                          //  !model.isBusy?
-                          // AspectRatio(
-                          //   aspectRatio: model.controller.value.aspectRatio,
-                          //   child: VideoPlayer(model.controller),):
-                          //   CircularProgressIndicator()
-                        ),
+                          })),
                       ),),
                 ),
                 Row(
                   children: <Widget>[
-                    Expanded(
-                       child: IconButton(icon: Icon(Icons.save),
+                      Expanded(
+                       child: IconButton(icon: Icon(Icons.content_copy),
                        onPressed: (){
-                         model.saveVideo(statusDetails.url);
+                         model.copyLink(statusDetails.shareLink);
 
                        }),
                     ),
-                     Expanded(
-                        child: IconButton(icon: Icon(Icons.share),
-                       onPressed: (){
-                         model.share(statusDetails.url, false);
+                    Expanded(
+                       child: IconButton(icon: Icon(Icons.save),
+                       onPressed: () async {
+                           MyDialogService().showLoadingDialog(context, key);
+                              bool isConnected = await model.connectionService.getConnectionState();
+                              if(isConnected){
+                              await model.saveFile(statusDetails.url, false);
+                              await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                              _snackbarService.showSnackbar(message: 'Video Saved',
+                              duration: Duration(milliseconds:1000));
+                              }else{
+                                await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                                _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
+                              duration: Duration(milliseconds:1000));
+                              }
+
                        }),
-                     ),
+                    ),
+                    
                     
                   
                   ],
@@ -116,7 +121,7 @@ class DatabaseVideosPreview extends StatelessWidget {
       viewModelBuilder:()=> SharedViewModel(),
       onModelReady: (model) async{
         await model.initializeNetworkVideoController(statusDetails.url);
-         DynamicLinkService().retriveDynamicLinks();
+        //  DynamicLinkService().retriveDynamicKnownLinks(statusDetails.shareLink);
       },
     
     );

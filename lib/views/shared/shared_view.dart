@@ -38,7 +38,7 @@ class SharedView extends StatelessWidget {
                     ),
                     model.value == 'Shared By You'
                         ? Container(
-                            child: model.sharedByYou.length != 0
+                            child: model.sharedByYou.length != 0 && model.value == 'Shared By You'
                                 ? Expanded(
                                     child: GridView.builder(
                                         gridDelegate:
@@ -107,7 +107,8 @@ class SharedView extends StatelessWidget {
                                         child: Center(
                                             child: Text('No Image found'))),
                           )
-                        : Container(
+                        : 
+                         Container(
                             child: model.sharedWithYou.length != 0
                                 ? Expanded(
                                     child: GridView.builder(
@@ -117,21 +118,21 @@ class SharedView extends StatelessWidget {
                                           crossAxisSpacing: 2,
                                           mainAxisSpacing: 3,
                                         ),
-                                        itemCount: model.sharedByYou.length,
+                                        itemCount: model.sharedWithYou.length,
                                         itemBuilder: (context, index) {
                                           bool isImage = model
-                                                  .sharedByYou[index]
+                                                  .sharedWithYou[index]
                                                   .fileType ==
                                               'Image';
                                           String imagePath =
-                                              model.sharedByYou[index].url;
+                                              model.sharedWithYou[index].url;
                                           final thumb =
-                                              model.sharedByYou[index].thumb;
+                                              model.sharedWithYou[index].thumb;
                                           return isImage
                                               ? InkWell(
                                                   onTap: () => model
                                                       .navigateToImagePreview(
-                                                          imagePath),
+                                                          model.sharedWithYou[index]),
                                                   child: Hero(
                                                     tag: imagePath,
                                                     child: Container(

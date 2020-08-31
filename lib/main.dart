@@ -12,9 +12,11 @@ import 'services/dynamic_link_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  DynamicLinkService().retriveDynamicLinks();
+   setUpLocator();
+  DynamicLinkService _dynamicLinkService= locator<DynamicLinkService>();
+  _dynamicLinkService.retriveDynamicLinks();
 
-  setUpLocator();
+ 
   
   runApp(
     // DevicePreview(

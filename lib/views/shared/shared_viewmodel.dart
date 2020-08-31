@@ -1,24 +1,24 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:status_downloader/models/status_details.dart';
 import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/router/routes.dart';
 import 'package:status_downloader/services/authentication.dart';
-import 'package:status_downloader/services/dynamic_link_service.dart';
+import 'package:status_downloader/services/connection_service.dart';
 import 'package:status_downloader/services/firebase_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 import 'dart:core';
+import 'package:http/http.dart' as http;
 
 class SharedViewModel extends BaseViewModel{
   NavigationService _navigationService = locator<NavigationService>();
   FireBaseService _fireBaseService = locator<FireBaseService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
+  ConnectionService connectionService = locator<ConnectionService>();
   String value = 'Shared By You';
   List<String> dropDown= [
     'Shared By You',
@@ -31,16 +31,17 @@ class SharedViewModel extends BaseViewModel{
   
   
   AuthService _authService = AuthService() ;
-  DynamicLinkService _dynamicLinkService = DynamicLinkService();
   bool get isSignedIn => _authService.isSignIn(); 
-  final Directory _photoDirectory = 
-  new Directory('/storage/emulated/0/Whatsapp/Media/.Statuses');
   VideoPlayerController controller;
   Future<void> intializeVideoPlayerFuture;
+  ConnectionService _connectionService = locator<ConnectionService>();
 
 
 
-  changeValue(newValue){
+  changeValue(newValue) async {
+    // setBusy(true);
+    // await Future.delayed(Duration(seconds: 10));
+    //  setBusy(false);
     value = newValue;
     notifyListeners();
 
@@ -48,14 +49,16 @@ class SharedViewModel extends BaseViewModel{
 
   getData()async{
     setBusy(true);
-    final docs = await _fireBaseService.getAllFromDataBase();
+    bool isConnected= await _connectionService.getConnectionState();
+    if(isConnected){
+       final docs = await _fireBaseService.getAllFromDataBase();
     if(docs.sharedByYou.length !=0){
      _sharedByYou = await  _fireBaseService.getSharedByYou(docs);
      _sharedWithYou = await  _fireBaseService.getSharedWithYou(docs);
-     
-    
+    }
 
     }
+   
     setBusy(false);
     
    
@@ -79,29 +82,19 @@ class SharedViewModel extends BaseViewModel{
 
   }
 
-   saveImage(path) async{
-    //   String path = '/storage/emulated/0/status_downloader';
-    // if(!Directory(path).existsSync()){
-    //   Directory(path).createSync(recursive:true);
+   saveFile(String url, bool isImage) async{
+      String path = '/storage/emulated/0/status_downloader';
+    if(!Directory(path).existsSync()){
+      Directory(path).createSync(recursive:true);
 
-    // }
-    // print(base64Decode(path));
-
-    // var response = await Dio().
-     
-
-
-    // Uri uri = Uri.parse(path);
-    // File file = new File.fromUri(uri);
-    // Uint8List bytes;
-    // await file.readAsBytes().then((value) {
-    //   bytes = Uint8List.fromList(value);
-    // }).catchError((onError){
-    //   print(onError.toString());
-    // });
-    // // ImageGallerySaver.saveFile(file)
-    // final result =  await ImageGallerySaver.saveImage(Uint8List.fromList(bytes));
-    // print(result);
+    }
+     final date = DateTime.now().millisecondsSinceEpoch;
+    String newName = isImage?'$path/IMG-$date.jpg':'$path/VID-$date.mp4';
+     File file = new File(newName);
+     var request =await http.get(url);
+     var bytes =  request.bodyBytes;
+     await file.writeAsBytes(bytes);
+     print(file.path);
 
     
   }
@@ -128,25 +121,6 @@ class SharedViewModel extends BaseViewModel{
       controller.play();
     }
     notifyListeners();
-  }
-
-  saveVideo(videoPath) async{
-
-    Uri uri = Uri.parse(videoPath);
-    File file = new File.fromUri(uri);
-    String path = '/storage/emulated/0/status_downloader';
-    if(!Directory(path).existsSync()){
-      Directory(path).createSync(recursive:true);
-
-    }
-    final date = DateTime.now().millisecondsSinceEpoch;
-    String newName ='$path/VID-$date.mp4';
-    final gg = await file.copy(newName);
-    print(gg);
-    // file.copy(newPath);
-    
-
-    
   }
 
   share(path, bool isImage) async{

@@ -6,14 +6,16 @@ import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/home/home_viewmodel.dart';
 
-class ImagesPreview extends StatelessWidget {
+import '../downloaded_viewmodel.dart';
+
+class DownloadImagesPreview extends StatelessWidget {
   final String imagePath;
-  ImagesPreview(this.imagePath);
+  DownloadImagesPreview(this.imagePath);
 
   @override
   Widget build(BuildContext context) {
     SnackbarService _snackbarService = locator<SnackbarService>();
-    return ViewModelBuilder<HomeViewModel>.reactive(
+    return ViewModelBuilder<DownloadViewModel>.reactive(
       builder: (context, model, child) {
         return Scaffold(
             appBar: AppBar(
@@ -100,7 +102,7 @@ class ImagesPreview extends StatelessWidget {
               ),
             ));
       },
-      viewModelBuilder: () => HomeViewModel(),
+      viewModelBuilder: () => DownloadViewModel(),
     );
   }
 }

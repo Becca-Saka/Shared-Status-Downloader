@@ -3,7 +3,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:status_downloader/models/status_details.dart';
+import 'package:status_downloader/router/locator.dart';
+import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/home/home_viewmodel.dart';
 import 'package:status_downloader/views/shared/shared_viewmodel.dart';
 
@@ -13,6 +16,7 @@ class DatabaseImagesPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SnackbarService _snackbarService = locator<SnackbarService>();
     return ViewModelBuilder<SharedViewModel>.reactive(
       builder: (context, model, child){
         
@@ -38,7 +42,9 @@ class DatabaseImagesPreview extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                 vertical:20, horizontal: 5,
                               ),
-                          child:Image.network( statusDetails.url,
+                          child:
+                          
+                          Image.network( statusDetails.url,
                                   fit: BoxFit.contain),
                         ),
                       ),),
@@ -54,17 +60,24 @@ class DatabaseImagesPreview extends StatelessWidget {
                     ),
                     Expanded(
                        child: IconButton(icon: Icon(Icons.save),
-                       onPressed: (){
-                         model.saveImage(statusDetails.url);
+                       onPressed: () async {
+                          MyDialogService().showLoadingDialog(context, key);
+                              bool isConnected = await model.connectionService.getConnectionState();
+                              if(isConnected){
+                              await  model.saveFile(statusDetails.url, true);
+                              await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                              _snackbarService.showSnackbar(message: 'Image Saved',
+                              duration: Duration(milliseconds:1000));
+                              }else{
+                                await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                                _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
+                              duration: Duration(milliseconds:1000));
 
+                              }
                        }),
                     ),
-                     Expanded(
-                        child: IconButton(icon: Icon(Icons.share),
-                       onPressed: (){
-                         model.share(statusDetails.url, true);
-                       }),
-                     ),
                   
                   ],
                 )

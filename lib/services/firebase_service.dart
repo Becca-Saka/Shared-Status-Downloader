@@ -43,6 +43,7 @@ class FireBaseService{
     if(upload.error == null){
       print('uploaded');
       final String url = await upload.ref.getDownloadURL();
+      print(url);
       shareLink= await uploadToDatabase(documentRef,thumb, url,isImage);
       //  await  getLinkFromDataBase(id);
       // await uploadToDatabase(documentRef, url);
@@ -77,7 +78,7 @@ class FireBaseService{
     UserDetails details = UserDetails(sharedByYou:[id]);
     await user.update(details.sharedByYouMap());
     print(' user database set done');
-     shareLink = await getLinkFromDataBase(userId,url,isImage ==true?'Images':'Videos' );
+     shareLink = await getLinkFromDataBase(userId,url,isImage ==true?'Image':'Video',id);
 
      StatusDetails update = StatusDetails(shareLink: shareLink);
     await documentRef.set(update.updateMap(), SetOptions(merge:true));
@@ -87,10 +88,21 @@ class FireBaseService{
 
 
   }
+  Future<void> updateSharedWithYou(id) async {
+    print('updating');
+    print(id);
+    final userId = _firebaseAuth.currentUser.uid;   
+    DocumentReference user = usersRef.doc(userId);
+    UserDetails details = UserDetails(sharedWithYou:[id]);
+    await user.update(details.sharedWithYouMap());
+    print(' user database set done');
+
+  }
   
   Future<String> getLinkFromDataBase(String userId,String uploadUrl,
-   String uploadType) async {
-    final String url = await  _dynamicLinkService.createDynamicLink('status',userId, uploadUrl,uploadType: uploadType);
+   String uploadType,String docId) async {
+  
+    final String url = await  _dynamicLinkService.createDynamicLink('status',docId,userId, uploadUrl,uploadType: uploadType);
 
     return url;
     
@@ -136,23 +148,23 @@ class FireBaseService{
   }
  Future<List<StatusDetails>> getSharedWithYou (UserDetails documentLinks)async{
      List<StatusDetails> statusDetails=[];
-  //    final allData = await collectionRef.get();
-  //    final result = allData.docs.map((document) => 
-  //    StatusDetails.fromFireStore(document.data()));
-  //      print('getting items');
-  //     for(final item in result){
+     final allData = await collectionRef.get();
+     final result = allData.docs.map((document) => 
+     StatusDetails.fromFireStore(document.data()));
+       print('getting items');
+      for(final item in result){
         
-  //       for(final status in documentLinks.sharedWithYou){
+        for(final status in documentLinks.sharedWithYou){
           
-  //         if(item.uid ==status){
+          if(item.uid ==status){
 
-  //           statusDetails.add(item);
-  //           print('hii');
-  //           print(item.url);
-  //         }
-  //       }
-  //     }
-  //  print('done with items getting');
+            statusDetails.add(item);
+            print('hii');
+            print(item.url);
+          }
+        }
+      }
+   print('done with items getting');
    
     return statusDetails;
     

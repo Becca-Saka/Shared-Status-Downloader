@@ -14,7 +14,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 import 'package:path/path.dart';
 
-class HomeViewModel extends BaseViewModel {
+class DownloadViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   FireBaseService _firebaseService = locator<FireBaseService>();
   PermissionService _permissionService = locator<PermissionService>();
