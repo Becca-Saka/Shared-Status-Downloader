@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:status_downloader/views/widgets/size_config.dart';
 import 'downloaded_viewmodel.dart';
 import 'tabs/images_view.dart';
 import 'tabs/videos_view.dart';
 class DownloadView extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DownloadViewModel>.reactive(
@@ -27,10 +29,14 @@ class DownloadView extends StatelessWidget {
                         indicatorColor: Theme.of(context).buttonColor,
                         tabs: [
                           Tab(
-                            child: Text('Images'),
+                            child: Text('Images', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3.5),
+                      )),
                           ),
                           Tab(
-                            child: Text('Videos'),
+                            child: Text('Videos', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3.5),
+                      )),
                           )
                         ],
                       ),

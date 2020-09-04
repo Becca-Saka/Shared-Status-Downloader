@@ -5,6 +5,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/home/home_viewmodel.dart';
+import 'package:status_downloader/views/widgets/size_config.dart';
 
 import '../downloaded_viewmodel.dart';
 
@@ -22,8 +23,8 @@ class DownloadImagesPreview extends StatelessWidget {
               elevation: 0.0,
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back, color:Colors.black),
-                onPressed: (){
+                icon: Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
                   Navigator.pop(context);
                 },
               ),
@@ -51,53 +52,60 @@ class DownloadImagesPreview extends StatelessWidget {
                   Row(
                     children: <Widget>[
                       Expanded(
-                        child: IconButton(
-                            icon: Icon(Icons.save),
-                            onPressed: () async {
-                              MyDialogService().showLoadingDialog(context, key);
-                              await model.saveFile(imagePath, true);
-                              await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                              _snackbarService.showSnackbar(message: 'Image Saved',
-                              duration: Duration(milliseconds:1000));
-                             
-                            
-                            }
+                        child: InkWell(
+                          onTap: () => model.share(imagePath, true),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.share,
+                                    size: SizeConfig.xMargin(context, 6)),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Share',
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.textSize(context, 3.5),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                        ),
                       ),
                       Expanded(
-                        child: IconButton(
-                            icon: Icon(Icons.share),
-                            onPressed: () =>model.share(imagePath, true)
+                        child: InkWell(
+                          onTap: () async {
+                             bool result =  await model.deleteFile(imagePath);
+                           if(result){
+                             Navigator.of(context).pop('deleted');
+                           }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.delete,
+                                    size: SizeConfig.xMargin(context, 6)),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.textSize(context, 3.5),
+                                  ),
+                                ),
+                              ],
                             ),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                            icon: Icon(Icons.cloud_upload),
-                            onPressed: () async{
-                               MyDialogService().showLoadingDialog(context, key);
-                              bool isConnected = await model.connectionService.getConnectionState();
-                              if(isConnected){
-                              String link = await model.uploadFile(true,path:imagePath);
-                              await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                               await Future.delayed(Duration(milliseconds: 500));
-                               MyDialogService().showCopyDialog(
-                                 context, key,
-                                link);
-                              }else{
-                                await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                                _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
-                              duration: Duration(milliseconds:1000));
-
-                              }
-                              
-                            }
-                            ),
+                          ),
+                        ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ));

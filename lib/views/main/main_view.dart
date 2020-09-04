@@ -4,6 +4,7 @@ import 'package:stacked/stacked.dart';
 import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/downloaded/downloaded_view.dart';
 import 'package:status_downloader/views/home/home_view.dart';
+import 'package:status_downloader/views/shared/lazy_index_stacked.dart';
 import 'package:status_downloader/views/shared/shared_view.dart';
 import 'package:status_downloader/views/signin/signin_view.dart';
 import 'package:status_downloader/views/widgets/size_config.dart';
@@ -19,6 +20,7 @@ class MainView extends StatelessWidget {
 
   ];
   var _currentScreen = 0;
+   final PageStorageBucket bucket = PageStorageBucket();
 
 
   
@@ -36,16 +38,9 @@ class MainView extends StatelessWidget {
               fontSize: SizeConfig.textSize(context, 5)
             ),),
             actions: <Widget>[
+           
               IconButton(
-                icon: Icon(Icons.arrow_downward),
-                onPressed: (){
-                  model.navigateToDownloadedView();
-                  
-
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.settings),
+                icon: Icon(Icons.settings, size: SizeConfig.xMargin(context, 5),),
                 onPressed: (){
                   _scaffoldKey.currentState.openEndDrawer();
 
@@ -64,11 +59,13 @@ class MainView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     ListTile(
-                      leading: Icon(Icons.wb_sunny, color: Colors.green),
+                      leading: Icon(Icons.wb_sunny, color: Colors.green, size: SizeConfig.xMargin(context, 5),),
                       title: Text('Night Mode', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3),
                         color: Colors.green
                       )),
                       trailing: Switch(
+                        
                         activeColor: Colors.white,
                         value: false, onChanged: (bool change){
 
@@ -77,8 +74,9 @@ class MainView extends StatelessWidget {
                     ),
                     Divider(),
                       ListTile(
-                      leading: Icon(Icons.star, color: Colors.green),
+                      leading: Icon(Icons.star, color: Colors.green, size: SizeConfig.xMargin(context, 5),),
                       title: Text('Rate on play store', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3),
                         color: Colors.green
                       )),
                       
@@ -87,7 +85,10 @@ class MainView extends StatelessWidget {
 
                      Expanded(
                       child: Container(
-                        child: Center(child: Text('design'))
+                        child: Center(child: Text('design', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3),
+                        color: Colors.green
+                      )))
                       ),
                     ),
 
@@ -108,31 +109,74 @@ class MainView extends StatelessWidget {
                             SignInView())));
                              
                           },
-                          child: Text('Sign Out')),
+                          child: Text('Sign Out', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3),
+                        color: Colors.white
+                      ))),
                     ),
                    
                   ],
                 ),
               ),
             ),),
-          body: _screens[model.currentIndex],
-          bottomNavigationBar: BottomNavigationBar(
-            onTap: model.changeIndex,
-            currentIndex: model.currentIndex,
-            items: [
-            BottomNavigationBarItem(icon: Icon(Icons.phone_android),
-            title: Text('Local')),
+          body:  mainView(context, model),
+          // bottomNavigationBar: BottomNavigationBar(
+          //   onTap: model.changeIndex,
+          //   currentIndex: model.currentIndex,
+          //   items: [
+          //   BottomNavigationBarItem(icon: Icon(Icons.phone_android, size: SizeConfig.xMargin(context, 4.5),),
+          //   title: Text('Local', style: TextStyle(
+          //                fontSize: SizeConfig.textSize(context, 3.5),
+          //             ))),
           
-            BottomNavigationBarItem(icon: Icon(Icons.folder_shared),
-            title: Text('Shared')),
+          //   BottomNavigationBarItem(icon: Icon(Icons.folder_shared, size: SizeConfig.xMargin(context, 4.5),),
+          //   title: Text('Shared', style: TextStyle(
+          //                fontSize: SizeConfig.textSize(context, 3.5),
+          //             ))),
 
-            BottomNavigationBarItem(icon: Icon(Icons.file_download),
-            title: Text('Downloads')),
-          ])
+          //   BottomNavigationBarItem(icon: Icon(Icons.file_download, size: SizeConfig.xMargin(context, 4.5),),
+          //   title: Text('Downloads', style: TextStyle(
+          //                fontSize: SizeConfig.textSize(context, 3.5),
+          //             ))),
+          // ])
+        
         );
       },
       viewModelBuilder: ()=> MainViewModel() ,
 
     );
   }
+    Widget mainView(BuildContext context, MainViewModel model) {
+    return Scaffold(
+      body: PageStorage(
+        bucket: bucket,
+        child: LazyIndexedStack(
+          reuse: true,
+          index: model.currentIndex,
+          itemCount: _screens.length,
+          itemBuilder: (_, index) => _screens[index],
+        ),
+      ),
+       bottomNavigationBar: BottomNavigationBar(
+          onTap: model.changeIndex,
+          currentIndex: model.currentIndex,
+          items: [
+          BottomNavigationBarItem(icon: Icon(Icons.phone_android, size: SizeConfig.xMargin(context, 4.5),),
+          title: Text('Local', style: TextStyle(
+                       fontSize: SizeConfig.textSize(context, 3.5),
+                    ))),
+        
+          BottomNavigationBarItem(icon: Icon(Icons.folder_shared, size: SizeConfig.xMargin(context, 4.5),),
+          title: Text('Shared', style: TextStyle(
+                       fontSize: SizeConfig.textSize(context, 3.5),
+                    ))),
+
+          BottomNavigationBarItem(icon: Icon(Icons.file_download, size: SizeConfig.xMargin(context, 4.5),),
+          title: Text('Downloads', style: TextStyle(
+                       fontSize: SizeConfig.textSize(context, 3.5),
+                    ))),
+        ])
+        );
+  }
+
 }

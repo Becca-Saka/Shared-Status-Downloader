@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:status_downloader/views/widgets/size_config.dart';
 import 'home_viewmodel.dart';
 import 'tabs/images_view.dart';
 import 'tabs/videos_view.dart';
 class HomeView extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
+      disposeViewModel: false,
+      fireOnModelReadyOnce: true,
+      initialiseSpecialViewModelsOnce: true,
       builder: (context, model, child){
 
         return Scaffold(
+          // key: PageStorageKey('Page1'),
          
           body: Container(
             child: DefaultTabController(
@@ -27,10 +33,14 @@ class HomeView extends StatelessWidget {
                         indicatorColor: Theme.of(context).buttonColor,
                         tabs: [
                           Tab(
-                            child: Text('Images'),
+                            child: Text('Images', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3.5),
+                      )),
                           ),
                           Tab(
-                            child: Text('Videos'),
+                            child: Text('Videos', style: TextStyle(
+                         fontSize: SizeConfig.textSize(context, 3.5),
+                      )),
                           )
                         ],
                       ),
@@ -40,6 +50,7 @@ class HomeView extends StatelessWidget {
                     model.isPermitted?
                     model.isWhatsappInstalled? Expanded(
                       child: TabBarView(
+                        key: PageStorageKey('Page1'),
                         children: <Widget>[
                           ImagesView(),
                           VideosView()

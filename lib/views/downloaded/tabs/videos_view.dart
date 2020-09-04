@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:status_downloader/views/home/previewers/video_preview.dart';
 import 'package:status_downloader/views/widgets/size_config.dart';
 
 import '../../widget.dart';
@@ -19,13 +18,39 @@ class VideosView extends StatelessWidget {
          return Scaffold(
           body: Container(
             child: model.statusVideoes.length !=0? 
-          ListView.builder(
+          GridView.builder(
               itemCount: model.statusVideoes.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 3,
+              ),
               itemBuilder: (context, index){
                 final videoPath = model.statusVideoes[index].path;
                 final videoThumb = model.statusVideoes[index].thumb;
+              
+
                 return InkWell(
-                  onTap: ()=>model.navigateToVideoPreview(model.statusVideoes[index]),
+                  onTap: ()async{
+
+                   final result = await  model.navigateToVideoPreview(model.statusVideoes[index]);
+                    if(result != null){
+                      print(result);
+                       await model.getAllStatus();
+                      await model.getThumbNails();
+
+                      model.snackbarService.showSnackbar(message: 'Deleted',
+                        duration: Duration(milliseconds:1000)
+                        );
+                       
+                    }else{
+                      print('This is $result');
+                    }
+
+
+
+                    // model.navigateToVideoPreview(model.statusVideoes[index]);
+                    },
                         child: Hero(
                           tag: videoPath,
                           child: Padding(
@@ -35,9 +60,14 @@ class VideosView extends StatelessWidget {
                     width:width,
                     child: playOverlay(videoThumb,SizeConfig.xMargin(context, 12))
                      ),),),
-                );}):
+                );
+              
+              }
+              )
+                :
+                 
                  model.isBusy?Center(child: CircularProgressIndicator()) :Center(child: Text('No video found', style: TextStyle(
-                fontSize: 30,
+                fontSize: SizeConfig.textSize(context, 4),
               ),)),
           ),
         );

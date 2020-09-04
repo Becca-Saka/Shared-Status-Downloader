@@ -45,8 +45,6 @@ class FireBaseService{
       final String url = await upload.ref.getDownloadURL();
       print(url);
       shareLink= await uploadToDatabase(documentRef,thumb, url,isImage);
-      //  await  getLinkFromDataBase(id);
-      // await uploadToDatabase(documentRef, url);
       
     
     print('saved');
@@ -102,7 +100,7 @@ class FireBaseService{
   Future<String> getLinkFromDataBase(String userId,String uploadUrl,
    String uploadType,String docId) async {
   
-    final String url = await  _dynamicLinkService.createDynamicLink('status',docId,userId, uploadUrl,uploadType: uploadType);
+    final String url = await  _dynamicLinkService.createDynamicLink('status',docId);
 
     return url;
     
@@ -125,6 +123,7 @@ class FireBaseService{
  
    Future<List<StatusDetails>> getSharedByYou (UserDetails documentLinks)async{
      List<StatusDetails> statusDetails=[];
+     
      final allData = await collectionRef.get();
      final result = allData.docs.map((document) => 
      StatusDetails.fromFireStore(document.data()));

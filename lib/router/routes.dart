@@ -4,9 +4,10 @@
 // import 'package:fipple/ui/views/main/main_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:status_downloader/views/downloaded/previewers/download_image_preview.dart';
+import 'package:status_downloader/views/downloaded/previewers/download_video_preview.dart';
 import 'package:status_downloader/views/home/previewers/image_preview.dart';
 import 'package:status_downloader/views/home/previewers/video_preview.dart';
-import 'package:status_downloader/views/main/downloaded_view.dart';
 import 'package:status_downloader/views/main/main_view.dart';
 import 'package:status_downloader/views/shared/database_previewers/database_image_preview.dart';
 import 'package:status_downloader/views/shared/database_previewers/database_video_preview.dart';
@@ -23,7 +24,8 @@ abstract class RoutesNames {
   static const videoPreview = '/videoPreview';
   static const databaseImagePreview = '/databaseImagePreview';
   static const databaseVideoPreview = '/databaseVideoPreview';
-  static const downloadedView = '/downloadedView';
+  static const downloadedImagesView = '/downloadedImagesView';
+  static const downloadedVideosView = '/downloadedVideosView';
 }
 
 class Routes {
@@ -80,11 +82,19 @@ class Routes {
           settings: settings,
         );
 
-      case RoutesNames.downloadedView:
+      case RoutesNames.downloadedImagesView:
+       final argument = settings.arguments;
         return CupertinoPageRoute<dynamic>(
-          builder: (context) => DownloadedView(),
+          builder: (context) => DownloadImagesPreview(argument),
           settings: settings,
         );
+       case RoutesNames.downloadedVideosView:
+        final argument = settings.arguments;
+        return CupertinoPageRoute<dynamic>(
+          builder: (context) => DownloadVideosPreview(argument),
+          settings: settings,
+        );
+
 
 
 

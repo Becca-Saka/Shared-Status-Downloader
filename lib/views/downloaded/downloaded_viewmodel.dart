@@ -16,6 +16,7 @@ import 'package:path/path.dart';
 
 class DownloadViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
+  SnackbarService snackbarService = locator<SnackbarService>();
   FireBaseService _firebaseService = locator<FireBaseService>();
   PermissionService _permissionService = locator<PermissionService>();
   ConnectionService connectionService = locator<ConnectionService>();
@@ -31,7 +32,7 @@ class DownloadViewModel extends BaseViewModel {
   List<Uint8List> get statusVideoThumbList => _statusVideoThumbList;
 
   final Directory _photoDirectory =
-      new Directory('/storage/emulated/0/Whatsapp/Media/.Statuses');
+      new Directory('/storage/emulated/0/status_downloader');
   VideoPlayerController controller;
   Future<void> intializeVideoPlayerFuture;
 
@@ -50,6 +51,10 @@ class DownloadViewModel extends BaseViewModel {
         isWhatsappInstalled = false;
       } else {
         print('exist');
+        _statusImageList =[];
+        _statusVideoList = [];
+        _statusVideoes = [];
+
         final _list = _photoDirectory.listSync().map((e) => e.path);
         _statusImageList = _list
             .where((element) => element.endsWith('.jpg'))
@@ -66,6 +71,7 @@ class DownloadViewModel extends BaseViewModel {
   }
 
   getThumbNails() async {
+    print('yeah');
     setBusy(true);
     for (final item in _statusVideoList) {
       var thumb = await VideoThumbnail.thumbnailData(
@@ -78,14 +84,20 @@ class DownloadViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  navigateToImagePreview(imagePath) {
-    _navigationService.navigateTo(RoutesNames.imagesPreview,
+  Future navigateToImagePreview(imagePath) async{
+    final result = await _navigationService.navigateTo(RoutesNames.downloadedImagesView,
         arguments: imagePath);
+
+    return result;
   }
 
-  navigateToVideoPreview(VideoModel videoModel) {
-    _navigationService.navigateTo(RoutesNames.videoPreview,
+
+  Future  navigateToVideoPreview(VideoModel videoModel)  async{
+    final result = await _navigationService.navigateTo(RoutesNames.downloadedVideosView,
         arguments: videoModel);
+
+    return result;
+    
   }
 
   initializeVideoController(path) {
@@ -135,6 +147,14 @@ class DownloadViewModel extends BaseViewModel {
 
   uploader(path) {
     print('yess');
+  }
+  Future<bool> deleteFile(path) async{
+    final File file = File(path);
+    await file.delete();
+    // .then((_) => {
+    //   _navigationService.popRepeated(1)
+    // });
+    return true;
   }
 
   Future<String> uploadFile(bool isImage,

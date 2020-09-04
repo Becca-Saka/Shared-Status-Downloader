@@ -4,16 +4,19 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/home/home_viewmodel.dart';
+import 'package:status_downloader/views/widgets/size_config.dart';
 import 'package:video_player/video_player.dart';
 
-class VideosPreview extends StatelessWidget {
+import '../downloaded_viewmodel.dart';
+
+class DownloadVideosPreview extends StatelessWidget {
   final VideoModel videoModel;
-  VideosPreview(this.videoModel);
+  DownloadVideosPreview(this.videoModel);
 
   @override
   Widget build(BuildContext context) {
      SnackbarService _snackbarService = locator<SnackbarService>();
-    return ViewModelBuilder<HomeViewModel>.reactive(
+    return ViewModelBuilder<DownloadViewModel>.reactive(
       builder: (context, model, child) {
         return Scaffold(
             appBar: AppBar(
@@ -66,7 +69,7 @@ class VideosPreview extends StatelessWidget {
                                                         child: Center(
                                                             child: Icon(
                                                           Icons.play_arrow,
-                                                          size: 80,
+                                                          size: SizeConfig.xMargin(context, 15),
                                                         )),
                                                       ),
                                               ),
@@ -95,63 +98,73 @@ class VideosPreview extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Row(
+                   Row(
                     children: <Widget>[
                       Expanded(
-                        child: IconButton(
-                            icon: Icon(Icons.save),
-                            onPressed: () async {
-                               MyDialogService().showLoadingDialog(context, key);
-                              await model.saveFile(videoModel.path, false);
-                              await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                              _snackbarService.showSnackbar(message: 'Video Saved',
-                              duration: Duration(milliseconds:1000));
-                            }
+                        child: InkWell(
+                          onTap: () =>    model.share(videoModel.path, false),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.share,
+                                    size: SizeConfig.xMargin(context, 6)),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Share',
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.textSize(context, 3.5),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                        ),
                       ),
                       Expanded(
-                        child: IconButton(
-                            icon: Icon(Icons.share),
-                            onPressed: () {
-                              model.share(videoModel.path, false);
-                            }),
-                      ),
-                      Expanded(
-                        child: IconButton(
-                            icon: Icon(Icons.cloud_upload),
-                            onPressed: () async {
-
-                              MyDialogService().showLoadingDialog(context, key);
-                              bool isConnected = await model.connectionService.getConnectionState();
-                              if(isConnected){
-                              String link = await model.uploadFile(false,videoModel: videoModel);
-                              await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                               await Future.delayed(Duration(milliseconds: 300));
-                               MyDialogService().showCopyDialog(
-                                 context, key,
-                                link);
-                              }else{
-                                await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                                _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
-                              duration: Duration(milliseconds:1000));
-
-                              }
-                             
-                            }
+                        child: InkWell(
+                          onTap: ()  async {
+                           bool result = await model.deleteFile(videoModel.path);
+                           if(result){
+                             Navigator.of(context).pop('del');
+                           }
+                           },
+                            // Navigator.of(context)..pop('deleted');},
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.delete,
+                                    size: SizeConfig.xMargin(context, 6)),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Delete',
+                                  style: TextStyle(
+                                    fontSize: SizeConfig.textSize(context, 3.5),
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                        ),
                       ),
                     ],
-                  )
-                ],
+                  ),
+                
+                  ],
               ),
             ));
       },
-      viewModelBuilder: () => HomeViewModel(),
+      viewModelBuilder: () => DownloadViewModel(),
       onModelReady: (model) async {
         await model.initializeVideoController(videoModel.path);
+        print( model.controller.value.aspectRatio);
       },
     );
   }

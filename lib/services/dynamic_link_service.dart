@@ -28,7 +28,7 @@ class DynamicLinkService{
   }
     Future<void> retriveDynamicKnownLinks() async{
 
-      String path ='https://sharedstatusdownloader.page.link/TAiCAZJHieztf6tM9';
+      String path ='https://sharedstatusdownloader.page.link/2Kvk4oG4s5ASc5oB9';
       final PendingDynamicLinkData data = 
       await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(path));
       _handleDeepLink(data);
@@ -47,23 +47,25 @@ class DynamicLinkService{
       final Uri deepLink = data?.link;
     if(deepLink !=null){
       final query = deepLink.queryParameters;
-      final uploadType = query['uploadType'];
-       final userId = query['userid'];
-      final docId = query['docid'];
-       final url =deepLink.queryParameters['data'].replaceFirst('Statuses/$uploadType/', 
-       'Statuses%2F$uploadType%2F');
-       print(docId);
-        final token =deepLink.queryParameters['token'];
-        FireBaseService().updateSharedWithYou(docId);
-      StatusDetails details = StatusDetails(
-        url: '$url&token=$token',
-        userId: userId,
-        uid: docId,
-        shareLink: data?.link.toString()
-      );
-       print(uploadType);
+       final docId = query['docid'];
+      final doc = await FireBaseService().getEachSharedByYou(docId);
+       StatusDetails details =StatusDetails.fromFireStore(doc.data());
+      // final uploadType = query['uploadType'];
+      //  final userId = query['userid'];
+      //  final url =deepLink.queryParameters['data'].replaceFirst('Statuses/$uploadType/', 
+      //  'Statuses%2F$uploadType%2F');
+      //  print(docId);
+      //   final token =deepLink.queryParameters['token'];
+       await  FireBaseService().updateSharedWithYou(docId);
+      // StatusDetails details = StatusDetails(
+      //   url: '$url&token=$token',
+      //   userId: userId,
+      //   uid: docId,
+      //   shareLink: data?.link.toString()
+      // );
+      //  print(uploadType);
       
-      uploadType=='Image'?
+      details.fileType=='Image'?
        _navigationService.navigateTo(RoutesNames.databaseImagePreview,
       arguments:details ): _navigationService.navigateTo(RoutesNames.databaseVideoPreview,
       arguments:details );
@@ -71,11 +73,10 @@ class DynamicLinkService{
      
    }
   
-   Future<String> createDynamicLink(String linkType,String docId,String userID,
-    String path,{String uploadType}) async{
+   Future<String> createDynamicLink(String linkType,String docId) async{
      parameters = DynamicLinkParameters(
     uriPrefix: 'https://sharedstatusdownloader.page.link',
-    link: Uri.parse('https://sharedstatusdownloader.page.link/invite?uploadType=$uploadType&userid=$userID&docid=$docId&data=$path'),
+    link: Uri.parse('https://sharedstatusdownloader.page.link/$linkType?docid=$docId'),
      
      androidParameters: AndroidParameters(
        packageName: 'com.status_downloader',

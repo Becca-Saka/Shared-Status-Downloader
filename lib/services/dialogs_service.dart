@@ -68,93 +68,97 @@ class MyDialogService{
             opacity: a1.value,
             child: AlertDialog(
               key: key,
-              shape: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              shape: OutlineInputBorder(borderRadius: BorderRadius.circular(SizeConfig.xMargin(context, 5))),
              
               content: Builder(
               builder:(context){
 
                 return Container(
-                  height: SizeConfig.yMargin(context, 25),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Container(
-                            height: SizeConfig.xMargin(context, 15),
-                            width: SizeConfig.xMargin(context, 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.green
-                            ),
-                            child: Center(child: Icon(Icons.check,size:SizeConfig.xMargin(context, 8),color: Colors.white))),
-                        ),
-                         SizedBox(
-                          height: SizeConfig.yMargin(context, 2),
-                        ),
-                        Text('Status saved! Your sharing link is ready',
-                        style: TextStyle(
-                          fontSize:SizeConfig.textSize(context, 4.0),
-                        ),),
-
-                         SizedBox(
-                          height: SizeConfig.yMargin(context, 2),
-                        ),
-                        Row(
-                          children: [
-                             Expanded(
-                            child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    color: Colors.green,
-                    onPressed: () =>Navigator.pop(context),
+                  height: SizeConfig.yMargin(context, 28),
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
                     child: Center(
-                      child: Text(
-                        'Close',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize:SizeConfig.textSize(context, 4.5),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: Container(
+                              height: SizeConfig.xMargin(context, 15),
+                              width: SizeConfig.xMargin(context, 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(SizeConfig.xMargin(context, 15)),
+                                color: Colors.green
+                              ),
+                              child: Center(child: Icon(Icons.check,size:SizeConfig.xMargin(context, 8),color: Colors.white))),
+                          ),
+                           SizedBox(
+                            height: SizeConfig.yMargin(context, 2),
+                          ),
+                          Text('Status saved! Your sharing link is ready',
+                          style: TextStyle(
+                            fontSize:SizeConfig.textSize(context, 4.5),
+                          ),),
+
+                           SizedBox(
+                            height: SizeConfig.yMargin(context, 2),
+                          ),
+                          Row(
+                            children: [
+                               Expanded(
+                              child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      color: Colors.green,
+                      onPressed: () =>Navigator.pop(context),
+                      child: Center(
+                        child: Text(
+                          'Close',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize:SizeConfig.textSize(context, 4.5),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.xMargin(context, 1),
-                  ),
-                             Expanded(
-                            child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    color: Colors.green,
-                    onPressed:(){
-                      Clipboard.setData(new ClipboardData(text: link));
-                      Navigator.pop(context);
-                      _snackbarService.showSnackbar(message: 'Link copied',
-                      duration: Duration(milliseconds:1000)
-                      );
-                    },
-                    child: Center(
-                      child: Text(
-                        'Copy link',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize:SizeConfig.textSize(context, 4.5),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.xMargin(context, 1),
+                    ),
+                               Expanded(
+                              child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      color: Colors.green,
+                      onPressed:(){
+                        Clipboard.setData(new ClipboardData(text: link));
+                        Navigator.pop(context);
+                        _snackbarService.showSnackbar(message: 'Link copied',
+                        duration: Duration(milliseconds:1000)
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          'Copy link',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize:SizeConfig.textSize(context, 4.5),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                             ),
+                               ),
 
-                         
-                          ],
-                        ),
-                      ],
+                           
+                            ],
+                          ),
+                        
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:status_downloader/models/video_model.dart';
 import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/router/routes.dart';
 import 'package:status_downloader/services/connection_service.dart';
@@ -14,6 +15,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 import 'package:path/path.dart';
 
+// @singleton
 class HomeViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   FireBaseService _firebaseService = locator<FireBaseService>();
@@ -27,11 +29,24 @@ class HomeViewModel extends BaseViewModel {
   List<String> get statusImageList => _statusImageList;
   List<String> _statusVideoList = [];
   List<String> get statusVideoList => _statusVideoList;
+  List<String> _statusPersonalList = [];
+  List<String> get statusPersonalList => _statusPersonalList;
   List<Uint8List> _statusVideoThumbList = [];
   List<Uint8List> get statusVideoThumbList => _statusVideoThumbList;
 
+  List<VideoModel> _statusVideoesPersonal = [];
+  List<VideoModel> get statusVideoesPersonal => _statusVideoesPersonal;
+  List<String> _statusVideoPersonalList = [];
+  List<String> get statusVideoPersonalList => _statusVideoPersonalList;
+  List<Uint8List> _statusVideoPersonalThumbList = [];
+  List<Uint8List> get statusVideoPersonalThumbList => _statusVideoPersonalThumbList;
+
   final Directory _photoDirectory =
       new Directory('/storage/emulated/0/Whatsapp/Media/.Statuses');
+  final Directory _personalImageDirectory =
+    new Directory('/storage/emulated/0/Whatsapp/Media/WhatsApp Images/Sent');
+  final Directory _personalVideoDirectory =
+    new Directory('/storage/emulated/0/Whatsapp/Media/WhatsApp Videos/Sent');
   VideoPlayerController controller;
   Future<void> intializeVideoPlayerFuture;
 
@@ -42,8 +57,71 @@ class HomeViewModel extends BaseViewModel {
     setBusy(false);
     notifyListeners();
   }
+  Future<void> getAllPersonalImages() {
+    setBusy(true);
+    if (!isPermitted) {
+      if (!Directory('${_personalImageDirectory.path}').existsSync()) {
+        isWhatsappInstalled = false;
+      } else {
+        print('exist');
+        final _list = _personalImageDirectory.listSync().map((e) => e.path);
 
-  getAllStatus() {
+        for(final item in _list){
+             File file = File(item);
+          final difference =DateTime.now().difference(file.lastAccessedSync()).inHours; 
+         
+          if(difference <= 24&& item.endsWith('.jpg')){
+             _statusPersonalList.add(item);
+             print(_statusPersonalList);
+           
+
+          }
+          
+          // print(_list.length);
+         
+          // print(file.lastAccessedSync());
+        }
+        //
+      }
+    } else {
+      print('na me');
+    }
+    setBusy(false);
+    notifyListeners();
+  }
+
+   Future<void> getAllPersonalVideos() {
+    setBusy(true);
+    if (!isPermitted) {
+      if (!Directory('${_personalVideoDirectory.path}').existsSync()) {
+        isWhatsappInstalled = false;
+      } else {
+        print('exist');
+        final _list = _personalVideoDirectory.listSync().map((e) => e.path);
+
+        for(final item in _list){
+             File file = File(item);
+          final difference =DateTime.now().difference(file.lastAccessedSync()).inHours; 
+         
+          if(difference <= 24&& item.endsWith('.mp4')){
+             _statusVideoPersonalList.add(item);
+             print(_statusPersonalList);
+           
+
+          }
+        }
+        //
+      }
+    } else {
+      print('na me');
+    }
+    setBusy(false);
+    notifyListeners();
+  }
+
+
+
+  Future<void> getAllStatus() {
     setBusy(true);
     if (!isPermitted) {
       if (!Directory('${_photoDirectory.path}').existsSync()) {
@@ -72,6 +150,12 @@ class HomeViewModel extends BaseViewModel {
           video: item, quality: 50, imageFormat: ImageFormat.JPEG);
       _statusVideoes.add(new VideoModel(item, thumb));
     }
+
+    for (final item in _statusVideoPersonalList) {
+      var thumb = await VideoThumbnail.thumbnailData(
+          video: item, quality: 50, imageFormat: ImageFormat.JPEG);
+      _statusVideoesPersonal.add(new VideoModel(item, thumb));
+    }
     
     setBusy(false);
 
@@ -90,6 +174,7 @@ class HomeViewModel extends BaseViewModel {
 
   initializeVideoController(path) {
     File file = File(path);
+    print(file.lastAccessedSync());
     print(file.path);
     controller = VideoPlayerController.file(file);
     intializeVideoPlayerFuture = controller.initialize();
@@ -155,8 +240,4 @@ class HomeViewModel extends BaseViewModel {
   }
 }
 
-class VideoModel {
-  String path;
-  Uint8List thumb;
-  VideoModel(this.path, this.thumb);
-}
+

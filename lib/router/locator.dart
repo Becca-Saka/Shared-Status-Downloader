@@ -22,4 +22,5 @@ void setUpLocator(){
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => MyDialogService());
+  
 }
