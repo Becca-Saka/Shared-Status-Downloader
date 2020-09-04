@@ -1,4 +1,3 @@
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -15,20 +14,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   
-  Admob.initialize(testDeviceIds: ['C435CDA083D4EB3F581095B9ECB5728A']);
   setUpLocator();
   DynamicLinkService _dynamicLinkService= locator<DynamicLinkService>();
   _dynamicLinkService.retriveDynamicLinks();
 
  
   
-  runApp(
-    // DevicePreview(
-    //   enabled :!kReleaseMode,
-    //   builder: (context)=>
-      MyApp(),
-    // ),
-    );
+  runApp( MyApp(),);
 }
 
 class MyApp extends StatelessWidget {
@@ -36,14 +28,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // builder: DevicePreview.appBuilder,
-      title: 'Shared Status Saver',
+      title: 'Shared Status Downloader',
       theme: ThemeData(
         
         primaryColor: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // darkTheme: ThemeData.dark(),
       navigatorKey: locator<NavigationService>().navigatorKey,
       onGenerateRoute: Routes().onGenerateRoute,
       initialRoute: RoutesNames.mainView,

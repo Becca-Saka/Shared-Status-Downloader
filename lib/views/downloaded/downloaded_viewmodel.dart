@@ -91,6 +91,14 @@ class DownloadViewModel extends BaseViewModel {
     return result;
   }
 
+   requestStoragePermission() async {
+    setBusy(true);
+    notifyListeners();
+    isPermitted = await _permissionService.getStoragePermission();
+    setBusy(false);
+    notifyListeners();
+  }
+
 
   Future  navigateToVideoPreview(VideoModel videoModel)  async{
     final result = await _navigationService.navigateTo(RoutesNames.downloadedVideosView,

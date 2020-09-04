@@ -57,32 +57,41 @@ class HomeView extends StatelessWidget {
                         ],
                       ),
                     ):Expanded(child: Center(child:Text('Whatsapp not installed')))
-                        :Expanded(
-                      child: Center(child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-
-                        children: <Widget>[
-                          Text('Status need access to storage'),
-                          SizedBox(height: 20,),
-                          Row(mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              FlatButton(child: Text('Deny',),
-                                onPressed: (){
-                                  //TODO:deny implementation
-                                },),
-                              FlatButton(child: Text('Allow',),
-                                onPressed: () async{
-                                  // await model.requestStoragePermission();
-                                },),
-                            ],
-                          ),
-
-                        ],
-                      )),
+                        :
+                         Expanded(
+                                                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Shared Status Downloader need access to your storage',
+                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                                fontSize: SizeConfig.textSize(context, 4.0),
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black)),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: InkWell(
+                        onTap: () => model.requestStoragePermission(),
+                        child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(5)),
+                            height: 50,
+                            child: Center(child: Text('Allow')),
+                        ),
+                      ),
                     ),
                   ],
+                ),
+                         ),
+       
+                    ],
                 ),
               ),
             ),

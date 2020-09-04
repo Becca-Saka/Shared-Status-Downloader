@@ -57,6 +57,13 @@ class HomeViewModel extends BaseViewModel {
     setBusy(false);
     notifyListeners();
   }
+  requestStoragePermission() async {
+    setBusy(true);
+    notifyListeners();
+    isPermitted = await _permissionService.getStoragePermission();
+    setBusy(false);
+    notifyListeners();
+  }
   Future<void> getAllPersonalImages() {
     setBusy(true);
     if (!isPermitted) {

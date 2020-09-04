@@ -4,7 +4,7 @@ import 'package:stacked/stacked.dart';
 import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/downloaded/downloaded_view.dart';
 import 'package:status_downloader/views/home/home_view.dart';
-import 'package:status_downloader/views/shared/lazy_index_stacked.dart';
+import 'package:status_downloader/views/widgets/lazy_index_stacked.dart';
 import 'package:status_downloader/views/shared/shared_view.dart';
 import 'package:status_downloader/views/signin/signin_view.dart';
 import 'package:status_downloader/views/widgets/size_config.dart';

@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="status_downloader"
+        android:label="Shared Status Downloader"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
