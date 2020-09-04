@@ -59,8 +59,8 @@ class HomeViewModel extends BaseViewModel {
   }
   requestStoragePermission() async {
     setBusy(true);
-    notifyListeners();
-    isPermitted = await _permissionService.getStoragePermission();
+    await _permissionService.requestPermission();
+    
     setBusy(false);
     notifyListeners();
   }

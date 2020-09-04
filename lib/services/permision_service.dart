@@ -19,6 +19,10 @@ class PermissionService{
   //   }
 
   // }
+
+  Future requestPermission() async{
+    return  await [Permission.storage].request();
+  }
  
 
   Future<bool> getStoragePermission() async {
