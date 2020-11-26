@@ -101,23 +101,9 @@ class ImagesPreview extends StatelessWidget {
                       Expanded(
                        child: InkWell(
                           onTap: () async {
-                             MyDialogService().showLoadingDialog(context, key);
-                              bool isConnected = await model.connectionService.getConnectionState();
-                              if(isConnected){
-                              String link = await model.uploadFile(true,path:imagePath);
-                              await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                               await Future.delayed(Duration(milliseconds: 500));
-                               MyDialogService().showCopyDialog(
-                                 context, key,
-                                link);
-                              }else{
-                                await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
-                                _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
-                              duration: Duration(milliseconds:1000));
 
-                              }
+                            await model.imageUploader(context, key, imagePath);
+                             
                                },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),

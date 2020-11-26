@@ -29,9 +29,9 @@ class AuthService{
   //   return user;
   // }
 
-  Future<String> getUser() async {
+  Future<User> getUser() async {
    final firebaseUser =  _fireBaseAuth.currentUser;
-    return firebaseUser.uid;
+    return firebaseUser;
   }
 
   // Future<void> sendEmailVerification() async {

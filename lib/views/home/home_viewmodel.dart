@@ -1,13 +1,16 @@
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:status_downloader/models/video_model.dart';
 import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/router/routes.dart';
+import 'package:status_downloader/services/authentication.dart';
 import 'package:status_downloader/services/connection_service.dart';
+import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/services/firebase_service.dart';
 import 'package:status_downloader/services/permision_service.dart';
 import 'package:video_player/video_player.dart';
@@ -19,6 +22,8 @@ import 'package:path/path.dart';
 class HomeViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   FireBaseService _firebaseService = locator<FireBaseService>();
+  AuthService authService = locator<AuthService>();
+  SnackbarService _snackbarService = locator<SnackbarService>();
   PermissionService _permissionService = locator<PermissionService>();
   ConnectionService connectionService = locator<ConnectionService>();
   bool isPermitted = false;
@@ -245,6 +250,72 @@ class HomeViewModel extends BaseViewModel {
     print(uploaded);
     return uploaded;
   }
+
+  imageUploader(context, key, imagePath) async{
+    MyDialogService().showLoadingDialog(context, key);
+                              bool isConnected = await connectionService.getConnectionState();
+                              if(isConnected){
+                              final user = await authService.getUser();
+                              if(user!=null){
+                                 String link = await uploadFile(true,path:imagePath);
+                              await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                               await Future.delayed(Duration(milliseconds: 500));
+                               MyDialogService().showCopyDialog(
+                                 context, key,
+                                link);
+
+                              }else{
+                                 await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                                print('No user found');
+                                 _snackbarService.showSnackbar(message: 'You must sign in to use this feature',
+                              duration: Duration(milliseconds:2000));
+                              }
+                             
+                              }else{
+                                await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                                _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
+                              duration: Duration(milliseconds:1000));
+
+                              }
+
+  }
+
+   videoUploader(context, key, videoModel) async{
+    MyDialogService().showLoadingDialog(context, key);
+                              bool isConnected = await connectionService.getConnectionState();
+                              if(isConnected){
+                              final user = await authService.getUser();
+                              if(user!=null){
+                                 String link = await uploadFile(false,videoModel: videoModel);
+                              await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                               await Future.delayed(Duration(milliseconds: 300));
+                               MyDialogService().showCopyDialog(
+                                 context, key,
+                                link);
+
+                              }else{
+                                 await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                                print('No user found');
+                                 _snackbarService.showSnackbar(message: 'You must sign in to use this feature',
+                              duration: Duration(milliseconds:2000));
+                              }
+                             
+                              }else{
+                                await Future.delayed(Duration(seconds: 1));
+                              Navigator.pop(context);
+                                _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
+                              duration: Duration(milliseconds:1000));
+
+                              }
+
+  }
+
+
 }
 
 
