@@ -4,11 +4,21 @@ tags: []
 
 ---
 
-# status_downloader
+# Shared status downloader
 
-A new Flutter application.
 
-## Getting Started
+# You can download apk here
+
+This is a shared whatsapp status downloader that help you share your staus or you friends status with ease. You just need to share the link with instead of sharing the media individually.
+
+![Screenshot](screenshots/1.png)
+![Screenshot](screenshots/2.png)
+
+
+
+
+
+<!-- ## Getting Started
 
 This project is a starting point for a Flutter application.
 
@@ -19,4 +29,4 @@ A few resources to get you started if this is your first Flutter project:
 
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+samples, guidance on mobile development, and a full API reference. -->
