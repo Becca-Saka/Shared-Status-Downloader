@@ -33,6 +33,7 @@ class MainView extends StatelessWidget {
         return Scaffold(
           key: _scaffoldKey,
            appBar: AppBar(
+             backgroundColor: Colors.green,
              automaticallyImplyLeading: false,
             title: Text('Shared Status Downloader', style: TextStyle(
               fontSize: SizeConfig.textSize(context, 5)
@@ -40,9 +41,10 @@ class MainView extends StatelessWidget {
             actions: <Widget>[
            
               IconButton(
-                icon: Icon(Icons.settings, size: SizeConfig.xMargin(context, 5),),
-                onPressed: (){
-                  _scaffoldKey.currentState.openEndDrawer();
+                icon: Icon(Icons.person, size: SizeConfig.xMargin(context, 5),),
+                onPressed: () async{
+                 await model.handleAuth();
+                  // _scaffoldKey.currentState.openEndDrawer();
 
                 },
               ),
@@ -151,6 +153,7 @@ class MainView extends StatelessWidget {
       body: PageStorage(
         bucket: bucket,
         child: LazyIndexedStack(
+          key: UniqueKey(),
           reuse: true,
           index: model.currentIndex,
           itemCount: _screens.length,
@@ -159,6 +162,7 @@ class MainView extends StatelessWidget {
       ),
        bottomNavigationBar: BottomNavigationBar(
           onTap: model.changeIndex,
+          selectedItemColor: Colors.green,
           currentIndex: model.currentIndex,
           items: [
           BottomNavigationBarItem(icon: Icon(Icons.phone_android, size: SizeConfig.xMargin(context, 4.5),),

@@ -15,9 +15,9 @@ import 'package:status_downloader/views/signin/signin_view.dart';
 import 'package:status_downloader/views/signup/signup_view.dart';
 
 abstract class RoutesNames {
-  static const startupView = '/';
+  // static const startupView = '/';
   static const onboardingViewRoute = '/onboarding';
-  static const mainView = '/mainView';
+  static const mainView = '/';
   static const logInView = '/logInView';
   static const signUpView = '/signUpView';
   static const imagesPreview = '/imagesPreview';

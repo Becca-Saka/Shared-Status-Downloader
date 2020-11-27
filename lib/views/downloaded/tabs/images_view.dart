@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:async';
-
+import 'package:status_downloader/views/widgets/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -57,8 +57,8 @@ class ImagesView extends StatelessWidget {
                 }
                
                 ):
-                  Center(child: Text('No Image found', style: TextStyle(
-                fontSize: 30,
+                  Center(child: Text('You have no downloaded image', style: TextStyle(
+                fontSize: SizeConfig.textSize(context, 4.2),
               ),)),
           ),
         );

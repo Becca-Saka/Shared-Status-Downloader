@@ -25,7 +25,7 @@ class SharedView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text('Sort By', style: TextStyle(
-                            fontSize: SizeConfig.textSize(context, 3),
+                            fontSize: SizeConfig.textSize(context, 3.5),
                           )),
                           DropdownButton<String>(
                             value: model.value,
@@ -33,7 +33,7 @@ class SharedView extends StatelessWidget {
                             items: model.dropDown.map((String value) {
                               return DropdownMenuItem<String>(
                                   child: Text(value, style: TextStyle(
-                            fontSize: SizeConfig.textSize(context, 3),
+                            fontSize: SizeConfig.textSize(context, 3.5),
                           )), value: value);
                             }).toList(),
                           )

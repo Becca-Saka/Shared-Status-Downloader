@@ -2,6 +2,7 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:status_downloader/router/locator.dart';
 import 'package:status_downloader/services/authentication.dart';
+import 'package:status_downloader/services/dialogs_service.dart';
 
 class SignInViewModel extends BaseViewModel{
   SnackbarService _snackbarService = locator<SnackbarService>();
@@ -11,7 +12,7 @@ class SignInViewModel extends BaseViewModel{
  
 
 
-  Future doSignIn(String email, String password) async{
+  Future doSignIn(String email, String password,context, globalKey) async{
     if(email.isEmpty){
        _snackbarService.showSnackbar(
         message: 'Email cannot be empty',
@@ -27,15 +28,18 @@ class SignInViewModel extends BaseViewModel{
 
         );
     }else{
+        MyDialogService().showLoadingDialog(context, globalKey);
        final result = await _authService.signInUser(email, password);
     if(result is bool){
       _navigationService.popUntil((route) => route.isFirst);
 
     }else {
       print('error');
+     await  Future.delayed(Duration(milliseconds: 1000));
+     _navigationService.popRepeated(1);
       _snackbarService.showSnackbar(
         message: 'Something went wrong! Please try again',
-        title: 'Test',
+        title: 'Opss',
         duration: Duration(milliseconds: 1200),
 
         );

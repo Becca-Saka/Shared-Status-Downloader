@@ -89,11 +89,15 @@ class FireBaseService{
   Future<void> updateSharedWithYou(id) async {
     print('updating');
     print(id);
-    final userId = _firebaseAuth.currentUser.uid;   
-    DocumentReference user = usersRef.doc(userId);
-    UserDetails details = UserDetails(sharedWithYou:[id]);
-    await user.update(details.sharedWithYouMap());
-    print(' user database set done');
+    final mUser = _firebaseAuth.currentUser;  
+    if(mUser!=null){
+      DocumentReference user = usersRef.doc(mUser.uid);
+      UserDetails details = UserDetails(sharedWithYou:[id]);
+      await user.update(details.sharedWithYouMap());
+      print(' user database set done');
+
+    } 
+    
 
   }
   

@@ -22,7 +22,7 @@ import 'package:path/path.dart';
 class HomeViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   FireBaseService _firebaseService = locator<FireBaseService>();
-  AuthService authService = locator<AuthService>();
+  AuthService _authService = locator<AuthService>();
   SnackbarService _snackbarService = locator<SnackbarService>();
   PermissionService _permissionService = locator<PermissionService>();
   ConnectionService connectionService = locator<ConnectionService>();
@@ -255,11 +255,11 @@ class HomeViewModel extends BaseViewModel {
     MyDialogService().showLoadingDialog(context, key);
                               bool isConnected = await connectionService.getConnectionState();
                               if(isConnected){
-                              final user = await authService.getUser();
+                              final user = await _authService.getUser();
                               if(user!=null){
                                  String link = await uploadFile(true,path:imagePath);
                               await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
+                              _navigationService.popRepeated(1);
                                await Future.delayed(Duration(milliseconds: 500));
                                MyDialogService().showCopyDialog(
                                  context, key,
@@ -267,7 +267,8 @@ class HomeViewModel extends BaseViewModel {
 
                               }else{
                                  await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
+                                 _navigationService.popRepeated(1);
+                              // Navigator.pop(context);
                                 print('No user found');
                                  _snackbarService.showSnackbar(message: 'You must sign in to use this feature',
                               duration: Duration(milliseconds:2000));
@@ -275,7 +276,8 @@ class HomeViewModel extends BaseViewModel {
                              
                               }else{
                                 await Future.delayed(Duration(seconds: 1));
-                              Navigator.pop(context);
+                                  _navigationService.popRepeated(1);
+                              // Navigator.pop(context);
                                 _snackbarService.showSnackbar(message: 'Something went wrong, please try again',
                               duration: Duration(milliseconds:1000));
 
@@ -287,7 +289,7 @@ class HomeViewModel extends BaseViewModel {
     MyDialogService().showLoadingDialog(context, key);
                               bool isConnected = await connectionService.getConnectionState();
                               if(isConnected){
-                              final user = await authService.getUser();
+                              final user = await _authService.getUser();
                               if(user!=null){
                                  String link = await uploadFile(false,videoModel: videoModel);
                               await Future.delayed(Duration(seconds: 1));

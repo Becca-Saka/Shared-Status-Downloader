@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      // darkTheme: ThemeData.dark(),
       navigatorKey: locator<NavigationService>().navigatorKey,
       onGenerateRoute: Routes().onGenerateRoute,
       initialRoute: RoutesNames.mainView,

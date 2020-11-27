@@ -66,8 +66,8 @@ class VideosView extends StatelessWidget {
               )
                 :
                  
-                 model.isBusy?Center(child: CircularProgressIndicator()) :Center(child: Text('No video found', style: TextStyle(
-                fontSize: SizeConfig.textSize(context, 4),
+                 model.isBusy?Center(child: CircularProgressIndicator()) :Center(child: Text('You have no downloaded video', style: TextStyle(
+                fontSize: SizeConfig.textSize(context, 4.2),
               ),)),
           ),
         );

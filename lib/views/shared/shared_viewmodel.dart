@@ -51,11 +51,16 @@ class SharedViewModel extends BaseViewModel{
     setBusy(true);
     bool isConnected= await _connectionService.getConnectionState();
     if(isConnected){
-       final docs = await _fireBaseService.getAllFromDataBase();
-    if(docs.sharedByYou.length !=0){
-     _sharedByYou = await  _fireBaseService.getSharedByYou(docs);
-     _sharedWithYou = await  _fireBaseService.getSharedWithYou(docs);
-    }
+      final user = await _authService.getUser();
+      if(user!=null){
+         final docs = await _fireBaseService.getAllFromDataBase();
+          if(docs.sharedByYou.length !=0){
+          _sharedByYou = await  _fireBaseService.getSharedByYou(docs);
+          _sharedWithYou = await  _fireBaseService.getSharedWithYou(docs);
+          }
+
+      }
+      
 
     }
    

@@ -4,13 +4,14 @@ import 'package:stacked/stacked.dart';
 import 'package:status_downloader/services/dialogs_service.dart';
 import 'package:status_downloader/views/signup/signup_view.dart';
 import 'package:status_downloader/views/widget.dart';
+import 'package:status_downloader/views/widgets/size_config.dart';
 import 'signin_viewmodel.dart';
 
 class SignInView extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
    GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-    GlobalKey<State> _globalKey = new GlobalKey<State>();
+    GlobalKey<State> globalKey = new GlobalKey<State>();
 //  GlobalKey<FormState> _scaffoldKey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,8 @@ class SignInView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+
+                      SizedBox(height: SizeConfig.yMargin(context, 15)),
 
                         Text('Sign In',
                         style:  TextStyle(
@@ -66,8 +69,8 @@ class SignInView extends StatelessWidget {
                         ),
                         color: Colors.green,
                         onPressed: () async{
-                          MyDialogService().showLoadingDialog(context, _globalKey);
-                          await model.doSignIn(emailController.text, passwordController.text);
+                        
+                          await model.doSignIn(emailController.text, passwordController.text, context, globalKey);
                                
                         },
                         child: Center(
