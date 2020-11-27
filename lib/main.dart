@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: locator<NavigationService>().navigatorKey,
       onGenerateRoute: Routes().onGenerateRoute,
       initialRoute: RoutesNames.mainView,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

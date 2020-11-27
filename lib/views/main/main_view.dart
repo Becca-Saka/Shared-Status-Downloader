@@ -41,7 +41,7 @@ class MainView extends StatelessWidget {
             actions: <Widget>[
            
               IconButton(
-                icon: Icon(Icons.person, size: SizeConfig.xMargin(context, 5),),
+                icon: Icon(Icons.person, size: SizeConfig.xMargin(context, 5.5),),
                 onPressed: () async{
                  await model.handleAuth();
                   // _scaffoldKey.currentState.openEndDrawer();
